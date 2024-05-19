@@ -1,12 +1,63 @@
-function makeArray(firstArray, secondArray, maxLength) {
-  const newArray = [...firstArray, ...secondArray];
-  return newArray.length > maxLength ? newArray.slice(0, maxLength) : newArray;
+function calcAverageCalories(days) {
+
+  if (!Array.isArray(days)) {
+    throw new Error('calcAverageCalories: days повинен бути масивом');
+  }
+
+  for (const day of days) {
+    if (!isObject(day)) {
+      throw new Error('calcAverageCalories: кожен елемент days повинен бути об\'єктом');
+    }
+
+    const requiredProps = ['day', 'calories'];
+    for (const prop of requiredProps) {
+      if (!day.hasOwnProperty(prop)) {
+        throw new Error(`calcAverageCalories: об\'єкт у days повинен мати властивість ${prop}`);
+      }
+    }
+
+    if (typeof day.calories !== 'number') {
+      throw new Error('calcAverageCalories: calories повинен бути числом');
+    }
+  }
+
+  let totalCalories = 0;
+  for (const day of days) {
+    totalCalories += day.calories;
+  }
+
+  const averageCalories = totalCalories / days.length;
+  return averageCalories;
 }
 
-// Перевірка роботи функції
-console.log(makeArray(["Mango", "Poly"], ["Ajax", "Chelsea"], 3)); // ["Mango", "Poly", "Ajax"]
-console.log(makeArray(["Mango", "Poly", "Houston"], ["Ajax", "Chelsea"], 4)); // ["Mango", "Poly", "Houston", "Ajax"]
-console.log(makeArray(["Mango"], ["Ajax", "Chelsea", "Poly", "Houston"], 3)); // ["Mango", "Ajax", "Chelsea"]
-console.log(makeArray(["Earth", "Jupiter"], ["Neptune", "Uranus"], 2)); // ["Earth", "Jupiter"]
-console.log(makeArray(["Earth", "Jupiter"], ["Neptune", "Uranus"], 4)); // ["Earth", "Jupiter", "Neptune", "Uranus"]
-console.log(makeArray(["Earth", "Jupiter"], ["Neptune", "Uranus", "Venus"], 0)); // []
+function isObject(obj) {
+  return obj !== null && typeof obj === 'object';
+}
+
+console.log(
+  calcAverageCalories([
+    { day: "monday", calories: 3010 },
+    { day: "tuesday", calories: 3200 },
+    { day: "wednesday", calories: 3120 },
+    { day: "thursday", calories: 2900 },
+    { day: "friday", calories: 3450 },
+    { day: "saturday", calories: 3280 },
+    { day: "sunday", calories: 3300 }
+  ])
+);
+
+console.log(
+  calcAverageCalories([
+    { day: "monday", calories: 2040 },
+    { day: "tuesday", calories: 2270 },
+    { day: "wednesday", calories: 2420 },
+    { day: "thursday", calories: 1900 },
+    { day: "friday", calories: 2370 },
+    { day: "saturday", calories: 2280 },
+    { day: "sunday", calories: 2610 }
+  ])
+);
+
+console.log(
+  calcAverageCalories([])
+);
